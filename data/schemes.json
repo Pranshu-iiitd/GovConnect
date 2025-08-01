@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Udyam Registration",
+    "description": "Mandatory registration to be recognized as an MSME. Enables access to government schemes.",
+    "link": "https://udyamregistration.gov.in",
+    "keywords": ["udyam", "msme", "registration", "small business"]
+  },
+  {
+    "name": "Credit Guarantee Fund Scheme",
+    "description": "Collateral-free credit for MSMEs from approved banks.",
+    "link": "https://www.cgtmse.in/",
+    "keywords": ["loan", "credit", "fund", "guarantee"]
+  },
+  {
+    "name": "Trade License Delhi",
+    "description": "Required for all commercial establishments operating in Delhi.",
+    "link": "https://mcdonline.nic.in",
+    "keywords": ["trade license", "mcd", "business license"]
+  },
+  {
+    "name": "Pollution NOC (DPCC)",
+    "description": "Mandatory for businesses involved in manufacturing or waste.",
+    "link": "https://dpcc.delhigovt.nic.in",
+    "keywords": ["pollution", "noc", "environment", "dpcc"]
+  }
+]
