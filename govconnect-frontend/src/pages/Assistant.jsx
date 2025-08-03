@@ -1,9 +1,16 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function Assistant() {
   const [step, setStep] = useState(0);
   const [score, setScore] = useState("");
   const [responseList, setResponseList] = useState([]);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (step === 1 && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [step]);
 
   const handleScoreSubmit = () => {
     const scoreInt = parseInt(score);
@@ -13,6 +20,7 @@ export default function Assistant() {
     }
 
     let resp = [];
+
     if (scoreInt === 100) {
       resp = [
         "🎉 Outstanding — You’ve attained full compliance!",
@@ -59,62 +67,66 @@ export default function Assistant() {
     setStep(2);
   };
 
-  const handleOtherHelp = () => {
+  const resetAssistant = () => {
     setScore("");
     setResponseList([]);
     setStep(1);
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h1 className="text-3xl font-bold text-indigo-700 mb-4">GovMSE AI Assistant</h1>
+    <div className="min-h-screen bg-gradient-to-br from-[#4169E1] via-[#b3e5c9] to-[#e8fff3] p-6 flex items-center justify-center">
+      <div className="max-w-2xl w-full bg-white shadow-lg rounded-xl p-8">
+        <h1 className="text-3xl font-extrabold text-[#2a2f45] mb-4 text-center">GovMSE AI Assistant 🤖</h1>
 
-      {step === 0 && (
-        <div className="text-lg space-y-4">
-          <p>👋 Hi there! I'm tailored to help Delhi-based MSMEs navigate compliance.</p>
-          <button
-            onClick={() => setStep(1)}
-            className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
-          >
-            Start Guidance
-          </button>
-        </div>
-      )}
-
-      {step === 1 && (
-        <div className="space-y-4">
-          <p className="text-lg">🧮 Share your current GovScore (0–100):</p>
-          <input
-            type="number"
-            placeholder="e.g., 75"
-            className="border border-gray-300 rounded px-3 py-2 w-full"
-            value={score}
-            onChange={(e) => setScore(e.target.value)}
-          />
-          <button
-            onClick={handleScoreSubmit}
-            className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
-          >
-            Get Recommendations
-          </button>
-        </div>
-      )}
-
-      {step === 2 && (
-        <>
-          <div className="bg-gray-50 p-4 rounded space-y-2 mt-4">
-            {responseList.map((tip, i) => (
-              <p key={i} className="text-gray-800">• {tip}</p>
-            ))}
+        {step === 0 && (
+          <div className="text-lg space-y-6 text-center">
+            <p>👋 Hi! I’m here to help Delhi-based MSMEs with their compliance journey.</p>
+            <button
+              onClick={() => setStep(1)}
+              className="bg-[#4169E1] text-white px-6 py-2 rounded hover:bg-blue-800 transition"
+            >
+              Start Guidance
+            </button>
           </div>
-          <button
-            onClick={handleOtherHelp}
-            className="mt-4 text-blue-600 hover:underline"
-          >
-            Need help with anything else?
-          </button>
-        </>
-      )}
+        )}
+
+        {step === 1 && (
+          <div className="space-y-4">
+            <p className="text-lg font-medium">🧮 Enter your GovScore (0–100):</p>
+            <input
+              type="number"
+              placeholder="e.g., 75"
+              className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+              value={score}
+              onChange={(e) => setScore(e.target.value)}
+              ref={inputRef}
+            />
+            <button
+              onClick={handleScoreSubmit}
+              className="bg-[#43CD80] text-white px-6 py-2 rounded hover:bg-green-700 transition"
+            >
+              Get Recommendations
+            </button>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className="mt-6">
+            <h2 className="text-xl font-bold text-[#2a2f45] mb-2">📋 Your Recommendations</h2>
+            <div className="bg-blue-50 p-4 rounded-lg shadow-sm space-y-2 max-h-64 overflow-y-auto">
+              {responseList.map((tip, i) => (
+                <p key={i} className="text-gray-800">• {tip}</p>
+              ))}
+            </div>
+            <button
+              onClick={resetAssistant}
+              className="mt-4 text-sm text-blue-600 hover:underline"
+            >
+              Need help with something else?
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

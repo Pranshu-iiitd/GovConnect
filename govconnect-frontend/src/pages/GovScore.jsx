@@ -13,7 +13,6 @@ export default function GovScore() {
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(null);
 
-  // Assign weights to each document (out of total 100)
   const weights = {
     gst: 25,
     udyam: 20,
@@ -24,49 +23,77 @@ export default function GovScore() {
   };
 
   const handleChange = (key) => {
-    setDocs((prev) => ({ ...prev, [key]: !prev[key] }));
+    const updatedDocs = { ...docs, [key]: !docs[key] };
+    setDocs(updatedDocs);
+
+    // Real-time score preview
+    let total = 0;
+    for (const k in updatedDocs) {
+      if (updatedDocs[k]) total += weights[k];
+    }
+    setScore(Math.round(total));
   };
 
   const handleSubmit = () => {
-    let total = 0;
-    for (const key in docs) {
-      if (docs[key]) total += weights[key];
-    }
-    setScore(Math.round(total));
     setSubmitted(true);
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-4 text-blue-700">GovScore Checker</h1>
+    <div className="min-h-screen bg-gradient-to-br from-[#4169E1] via-[#b3e5c9] to-[#e8fff3] p-6">
+      <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-xl p-8">
+        <h1 className="text-3xl font-extrabold text-[#2a2f45] mb-6 text-center">
+          GovScore Checker
+        </h1>
 
-      <div className="space-y-2 mb-4">
-        {Object.entries(docs).map(([key, value]) => (
-          <label key={key} className="block">
-            <input
-              type="checkbox"
-              checked={value}
-              onChange={() => handleChange(key)}
-              className="mr-2"
-            />
-            <span className="capitalize">{key.toUpperCase()} Certificate</span>
-          </label>
-        ))}
-      </div>
-
-      <button
-        onClick={handleSubmit}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        Submit
-      </button>
-
-      {submitted && (
-        <div className="bg-white shadow rounded p-4 mt-6">
-          <h2 className="text-xl font-semibold text-green-700">Your GovScore:</h2>
-          <p className="text-3xl font-bold text-green-600">{score} / 100</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          {Object.entries(docs).map(([key, value]) => (
+            <label key={key} className="flex items-center bg-gray-100 p-3 rounded shadow-sm">
+              <input
+                type="checkbox"
+                checked={value}
+                onChange={() => handleChange(key)}
+                className="mr-3 w-5 h-5 accent-blue-600"
+              />
+              <span className="font-medium text-gray-800">{key.toUpperCase()} Certificate</span>
+            </label>
+          ))}
         </div>
-      )}
+
+        <div className="text-center">
+          <button
+            onClick={handleSubmit}
+            className="bg-[#4169E1] text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition"
+          >
+            Calculate GovScore
+          </button>
+        </div>
+
+        {score !== null && (
+          <div className="text-center mt-8">
+            <h2 className="text-xl font-bold text-[#43CD80] mb-2">Your GovScore:</h2>
+            <p className="text-4xl font-extrabold text-green-600">{score} / 100</p>
+
+            {submitted && (
+              <div className="mt-4 text-left bg-blue-50 p-4 rounded shadow-sm">
+                <h3 className="font-semibold mb-2 text-blue-800">Suggestions:</h3>
+                {score === 100 ? (
+                  <p className="text-green-700 font-medium">🎉 You're fully compliant. Great job!</p>
+                ) : (
+                  <ul className="list-disc pl-6 text-gray-700 space-y-1">
+                    {Object.entries(docs)
+                      .filter(([key, value]) => !value)
+                      .map(([key]) => (
+                        <li key={key}>
+                          Consider obtaining your <strong>{key.toUpperCase()}</strong> certificate to boost your compliance.
+                        </li>
+                      ))}
+                  </ul>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
