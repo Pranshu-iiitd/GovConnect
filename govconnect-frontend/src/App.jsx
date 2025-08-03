@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// App.jsx
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -14,10 +15,9 @@ import Checklist from "./pages/Checklist";
 import Report from "./pages/Report";
 import About from "./pages/About";
 
-
 function App() {
   return (
-    <Router>
+    <>
       <Navbar />
       <Routes>
         {/* Auth & Main */}
@@ -35,13 +35,13 @@ function App() {
         <Route path="/admin" element={<AdminPanel />} />
 
         {/* GovMSE Core Features */}
-        { <Route path="/govscore" element={<GovScore />} />}
-        { <Route path="/assistant" element={<Assistant />} />}
-        { <Route path="/report" element={<Report />} />}
-        { <Route path="/checklist" element={<Checklist />} />}
-        { <Route path="/about" element={<About />} />}
+        <Route path="/govscore" element={<GovScore />} />
+        <Route path="/assistant" element={<Assistant />} />
+        <Route path="/report" element={<Report />} />
+        <Route path="/checklist" element={<Checklist />} />
+        <Route path="/about" element={<About />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 
