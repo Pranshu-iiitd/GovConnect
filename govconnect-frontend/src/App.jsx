@@ -12,6 +12,7 @@ import GovScore from "./pages/GovScore";
 import Assistant from "./pages/Assistant";
 import Checklist from "./pages/Checklist";
 import Report from "./pages/Report";
+import About from "./pages/About";
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
         { <Route path="/assistant" element={<Assistant />} />}
         { <Route path="/report" element={<Report />} />}
         { <Route path="/checklist" element={<Checklist />} />}
+        { <Route path="/about" element={<About />} />}
       </Routes>
     </Router>
   );
