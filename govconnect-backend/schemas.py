@@ -6,3 +6,8 @@ class UserCreate(BaseModel):
 
 class Token(BaseModel):
     token: str
+
+class GovScoreUpdate(BaseModel):
+    has_gst: bool
+    has_udyam: bool
+    has_license: bool

@@ -1,54 +1,94 @@
-# 🚀 GovConnect+ / GovMSE – Empowering MSMEs in Delhi
+# 🏛️ GovMSE+ — AI-Powered Compliance for MSMEs
 
-GovConnect+ (Pro Model – GovMSE Edition) is a React + FastAPI powered platform designed to simplify compliance, licensing, and support systems for MSMEs in Delhi’s industrial zones. It aims to reduce dependency on middlemen, provide instant GovScore evaluations, AI guidance, and generate compliance reports.
-
----
-
-## 🌐 Live Demo
-> _(To be added after deployment)_
+**GovMSE+** is an AI-powered SaaS platform designed to empower Micro, Small, and Medium Enterprises (MSMEs) in India by simplifying government compliance. It helps users assess their compliance status, receive actionable suggestions, and generate professional reports for schemes, tenders, and funding applications.
 
 ---
 
-## 📦 Tech Stack
+## 🌐 Features
 
-### Frontend (React)
-- ✅ React (w/ Hooks)
-- ✅ React Router v6
-- ✅ Tailwind CSS
-- ✅ React Hot Toast
-- ✅ Lucide-React (Icons)
-- 🔒 html2pdf.js or jsPDF (planned for PDF generation)
+### ✅ GovScore Checker
+- Check if your MSME has all key government compliance documents (GST, Udyam, PAN, etc.)
+- Instantly calculate a **GovScore out of 100**
+- Get visual cues and recommendations to improve compliance
 
-### Backend (FastAPI – Currently Optional)
-- FastAPI (REST APIs)
-- SQLite + SQLAlchemy
-- JWT Authentication
-- Pydantic for schema validation
+### 🤖 AI Assistant
+- Based on your GovScore, get **Delhi-specific, hardcoded suggestions** to improve compliance
+- Chat-style tips for improving your legal standing and accessing schemes
 
-> 💡 *Note:* Backend is currently commented out. All core functionality is hardcoded into the frontend for ideathon prototype/demo purposes.
+### 📋 Checklist Generator
+- Tick available documents
+- Generate a **print-ready, professional PDF report** for stakeholders
 
----
+### 📄 Compliance Vault (Pro Feature)
+- Exclusive PDF report includes: GovScore, document status, suggestions, and MSME details
+- Tailored for banks, tenders, funding applications
 
-## ✨ Key Features
+### 👤 Profile Page
+- View email, token expiry, and logout options
+- Copy email functionality
 
-### ✅ Core Modules
-- 🔐 **Login / Signup with JWT**
-- 🧾 **Submit Complaint** – File complaints from dashboard
-- 📜 **User Profile** – View and update user details
-- 📋 **Complaint List** – View submitted complaints
-- 🧑‍💼 **Admin Panel** – View all users and complaints (role: admin)
+### 🏠 Dashboard & Home
+- Visually appealing overview of features with call-to-actions
 
 ---
 
-### 🏆 GovMSE Pro Features
-| Feature          | Description |
-|------------------|-------------|
-| **GovScore**     | Select 6 key documents (e.g., GST, Udyam, FSSAI) to generate a compliance score (out of 100) |
-| **AI Assistant** | Hardcoded interactive guide that gives MSME-specific advice based on your score |
-| **Checklist**    | (Planned) Steps to achieve full compliance |
-| **Report**       | (Pro) Locked for upgrade. Shows a golden lock icon with "Upgrade to Pro" prompt. |
+## 🛠️ Tech Stack
+
+- **Frontend**: React + Tailwind CSS
+- **PDF Generation**: jsPDF
+- **Authentication**: JWT (Token stored in browser)
+- **Routing**: React Router DOM
 
 ---
 
-## 📁 Project Structure
+## 🚀 Setup Instructions
 
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/yourusername/GovMSE.git
+cd GovMSE
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Start the application
+
+```bash
+npm run dev
+```
+
+This will run the app locally at `http://localhost:5173` (if using Vite).
+
+---
+
+## 📁 Folder Structure
+
+```
+/src
+  ├── /pages
+  │    ├── Dashboard.jsx
+  │    ├── GovScore.jsx
+  │    ├── Assistant.jsx
+  │    ├── Checklist.jsx
+  │    ├── Report.jsx
+  │    └── UserProfile.jsx
+  ├── /components
+  │    └── Navbar.jsx
+  ├── App.jsx
+  └── main.jsx
+```
+
+---
+
+## 📧 Contact
+
+Need help or want to contribute? Reach us at [support@govmse.in](mailto:support@govmse.in)
+
+---
+
+© {year} GovMSE. All rights reserved.

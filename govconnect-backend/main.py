@@ -110,3 +110,40 @@ def update_complaint_status(update: ComplaintUpdate, user_email: str = Depends(g
         complaints_db[update.id].status = update.status
         return {"msg": "Status updated"}
     raise HTTPException(status_code=404, detail="Complaint not found")
+
+
+from models import GovScoreData
+from schemas import GovScoreUpdate
+from sqlalchemy.orm import Session
+from database import SessionLocal
+
+@app.post("/govscore")
+def update_govscore(data: GovScoreUpdate, user_email: str = Depends(get_current_user)):
+    db = SessionLocal()
+    entry = db.query(GovScoreData).filter(GovScoreData.user_email == user_email).first()
+    if not entry:
+        entry = GovScoreData(user_email=user_email, has_gst=int(data.has_gst),
+                             has_udyam=int(data.has_udyam), has_license=int(data.has_license))
+        db.add(entry)
+    else:
+        entry.has_gst = int(data.has_gst)
+        entry.has_udyam = int(data.has_udyam)
+        entry.has_license = int(data.has_license)
+    db.commit()
+    return {"msg": "GovScore updated"}
+
+@app.get("/govscore")
+def get_govscore(user_email: str = Depends(get_current_user)):
+    db = SessionLocal()
+    entry = db.query(GovScoreData).filter(GovScoreData.user_email == user_email).first()
+    if not entry:
+        return {"score": 0, "details": "No data"}
+    score = sum([entry.has_gst, entry.has_udyam, entry.has_license]) * 33
+    return {
+        "score": score,
+        "details": {
+            "GST": bool(entry.has_gst),
+            "Udyam": bool(entry.has_udyam),
+            "License": bool(entry.has_license)
+        }
+    }
