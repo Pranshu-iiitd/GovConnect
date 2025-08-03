@@ -28,7 +28,7 @@ export default function Navbar() {
               <Link to="/assistant" className="hover:text-[#4169E1] transition">AI Assistant</Link>
               <Link to="/checklist" className="hover:text-[#4169E1] transition">Report</Link>
               <Link to="/report" className="hover:text-[#4169E1] transition">Vault</Link>
-              <Link to="/about" className="hover:text-[#4169E1] transition">About Me</Link>
+              <Link to="/about" className="hover:text-[#4169E1] transition">About Us</Link>
             </>
           )}
         </div>
