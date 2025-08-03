@@ -1,70 +1,99 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
 from pydantic import BaseModel
-from typing import List
-from fastapi.security import OAuth2PasswordBearer
+from typing import List, Optional
 from jose import jwt, JWTError
 
+#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
+
+from database import SessionLocal, engine, Base
+import models, schemas, auth
+
+# Setup app
 app = FastAPI()
 
-# Enable CORS for frontend communication
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Change this in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# === In-memory user and complaint DBs ===
-users = {
-    "admin@govconnect.com": "adminpass",
-    "user1@example.com": "123456"
-}
-complaints_db = []
+Base.metadata.create_all(bind=engine)
 
-# === Auth config ===
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 SECRET_KEY = "govconnectsecret"
 ALGORITHM = "HS256"
 
-# === Auth helper ===
-def get_current_user(token: str = Depends(oauth2_scheme)):
+# Dependency for DB
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# === Auth helpers ===
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email = payload.get("sub")
-        if email is None or email not in users:
+        if email is None:
             raise HTTPException(status_code=401, detail="Invalid token")
-        return email
+        user = db.query(models.User).filter(models.User.email == email).first()
+        if user is None:
+            raise HTTPException(status_code=401, detail="User not found")
+        return user.email
     except JWTError:
         raise HTTPException(status_code=401, detail="Token error")
 
-# === Pydantic Models ===
+# === Signup ===
+@app.post("/signup")
+def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    existing = db.query(models.User).filter(models.User.email == user.email).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    hashed = auth.hash_password(user.password)
+    new_user = models.User(email=user.email, hashed_password=hashed)
+    db.add(new_user)
+    db.commit()
+    return {"msg": "registered"}
+
+# === Login ===
+@app.post("/login")
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.email == form_data.username).first()
+    if not user or not auth.verify_password(form_data.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    token = auth.create_token({"sub": user.email})
+    return {"token": token}
+
+# === Complaints ===
 class Complaint(BaseModel):
     title: str
     description: str
-    status: str = "Pending"
-    user_email: str = ""
+    status: Optional[str] = "Pending"
+    user_email: Optional[str] = ""
 
 class ComplaintUpdate(BaseModel):
     id: int
     status: str
 
-# === Routes ===
+complaints_db = []
 
-# Submit complaint
 @app.post("/complaints")
 def submit_complaint(data: Complaint, user_email: str = Depends(get_current_user)):
     data.user_email = user_email
     complaints_db.append(data)
     return {"msg": "Complaint submitted"}
 
-# Get logged-in user's complaints
 @app.get("/my-complaints", response_model=List[Complaint])
 def get_user_complaints(user_email: str = Depends(get_current_user)):
     return [c for c in complaints_db if c.user_email == user_email]
 
-# Get all complaints (admin only), optional status filter
 @app.get("/all-complaints", response_model=List[Complaint])
 def get_all_complaints(user_email: str = Depends(get_current_user), status: str = None):
     if user_email != "admin@govconnect.com":
@@ -73,7 +102,6 @@ def get_all_complaints(user_email: str = Depends(get_current_user), status: str 
         return [c for c in complaints_db if c.status == status]
     return complaints_db
 
-# Admin updates complaint status by index
 @app.put("/update-complaint")
 def update_complaint_status(update: ComplaintUpdate, user_email: str = Depends(get_current_user)):
     if user_email != "admin@govconnect.com":
