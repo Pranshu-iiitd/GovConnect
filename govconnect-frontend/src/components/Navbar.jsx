@@ -25,8 +25,8 @@ export default function Navbar() {
               <Link to="/profile" className="hover:text-yellow-300 transition">Profile</Link>
               <Link to="/govscore" className="hover:text-yellow-300 transition">GovScore</Link>
               <Link to="/assistant" className="hover:text-yellow-300 transition">AI Assistant</Link>
-              <Link to="/checklist" className="hover:text-yellow-300 transition">Checklist</Link>
-              <Link to="/report" className="hover:text-yellow-300 transition">PDF Report</Link>
+              <Link to="/checklist" className="hover:text-yellow-300 transition">Report</Link>
+              <Link to="/report" className="hover:text-yellow-300 transition">Vault</Link>
               <button
                 onClick={handleLogout}
                 className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 ml-2"

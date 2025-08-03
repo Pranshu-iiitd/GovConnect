@@ -10,8 +10,8 @@ import ComplaintList from "./pages/ComplaintList";
 import AdminPanel from "./pages/AdminPanel";
 import GovScore from "./pages/GovScore";
 import Assistant from "./pages/Assistant";
-// import Checklist from "./pages/Checklist";
-// import Report from "./pages/Report";
+import Checklist from "./pages/Checklist";
+import Report from "./pages/Report";
 
 function App() {
   return (
@@ -35,8 +35,8 @@ function App() {
         {/* GovMSE Core Features */}
         { <Route path="/govscore" element={<GovScore />} />}
         { <Route path="/assistant" element={<Assistant />} />}
-        {/*<Route path="/checklist" element={<Checklist />} />
-        <Route path="/report" element={<Report />} /> } */}
+        { <Route path="/report" element={<Report />} />}
+        { <Route path="/checklist" element={<Checklist />} />}
       </Routes>
     </Router>
   );
